@@ -39,7 +39,11 @@ module SteamTracks
 
         response = https.request(request)
 
-        JSON(response.body)
+        json = JSON(response.body)
+        if response.code.to_i != 200
+          raise json["error"]
+        end
+        json
       end
     end
   end
