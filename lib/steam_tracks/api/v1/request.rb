@@ -40,9 +40,14 @@ module SteamTracks
         response = https.request(request)
 
         json = JSON(response.body)
+        #debug
+        #puts json
+        #return
+        #debug
         if response.code.to_i != 200
           raise json["error"]
         end
+        return json["result"] if json.has_key?("result")
         json
       end
     end
