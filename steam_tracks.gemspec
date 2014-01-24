@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = SteamTracks::VERSION
   spec.authors       = ["bontscho"]
   spec.email         = ["software@bontscho.de"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{Will come soon}
+  spec.description   = %q{Description will come soon too}
   spec.homepage      = ""
   spec.license       = "MIT"
 
@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency = "active_support", "~> 3.1"
+  spec.add_runtime_dependency "active_support", "~> 3.1"
   spec.add_development_dependency "bundler", "~> 1.5"
   spec.add_development_dependency "rake"
 end
