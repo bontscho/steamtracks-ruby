@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["software@bontscho.de"]
   spec.summary       = %q{Will come soon}
   spec.description   = %q{Description will come soon too}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/bontscho/steamtracks-ruby"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
