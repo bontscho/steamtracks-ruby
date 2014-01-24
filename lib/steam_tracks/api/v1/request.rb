@@ -3,7 +3,6 @@ require 'base64'
 require 'openssl'
 require 'net/http'
 require 'net/https'
-require 'awesome_print'
 require 'json'
 
 module SteamTracks
@@ -40,10 +39,7 @@ module SteamTracks
         response = https.request(request)
 
         json = JSON(response.body)
-        #debug
-        #puts json
-        #return
-        #debug
+
         if response.code.to_i != 200
           raise json["error"]
         end
