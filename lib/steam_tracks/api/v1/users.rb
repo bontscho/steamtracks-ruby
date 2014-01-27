@@ -30,11 +30,11 @@ module SteamTracks
         self.request :post, "users/flushleavers"
       end
 
-      def self.userDelta(from_timestamp = nil, fields = [])
+      def self.userChanges(from_timestamp = nil, fields = [])
         arguments = {}
         arguments[:from_timestamp] = (from_timestamp.nil? ? 0 : from_timestamp.to_i)
         arguments[:fields] = fields unless fields.count == 0
-        self.request :get, "users/delta", arguments
+        self.request :get, "users/changes", arguments
       end
     end
   end
