@@ -1,15 +1,15 @@
 module SteamTracks
   module Api
     class V1
-      def self.getSignupToken
-        result = self.request :get, "signup/token"
+      def self.getSignupToken(arguments = {})
+        result = self.request :get, "signup/token", arguments
         return result["token"] if result["token"]
         nil
       end
 
-      def self.getSignupURL(token = nil)
+      def self.getSignupURL(token = nil, arguments = {})
         if token.nil?
-          token = self.getSignupToken
+          token = self.getSignupToken(arguments)
         end
         "#{SteamTracks.steamtracks_base}/appauth/#{token}"
       end
