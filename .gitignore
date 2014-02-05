@@ -1,4 +1,5 @@
 /.idea
+phptest.php
 test.rb
 *.gem
 *.rbc

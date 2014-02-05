@@ -23,14 +23,14 @@ module SteamTracks
         signature = Base64.encode64(OpenSSL::HMAC.digest('sha1', SteamTracks.api_secret, payload))
 
         if method == :get
+          uri.query = "payload=#{URI.encode(payload)}"
           request = Net::HTTP::Get.new(uri, { 'Content-Type' => 'application/json'})
         elsif method == :post
           request = Net::HTTP::Post.new(uri, { 'Content-Type' => 'application/json'})
+          request.body = payload
         else
           raise "invalid request method"
         end
-
-        request.body = payload
 
         request["SteamTracks-Key"] = SteamTracks.api_key
         request["SteamTracks-Signature"] = URI.encode(signature)
