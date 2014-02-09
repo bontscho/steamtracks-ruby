@@ -493,6 +493,7 @@ class SteamTracksController < UserApplicationController
       userinfo = result["userinfo"]
 
       # reduce the nested json userinfo hash to match your steamtracks database model
+      # (this can be put into a helper because it will be used later again)
       newinfo = {}
       userinfo.each do |k,v|
         # look out for joined_app_at, steamid32 and dota2
@@ -531,8 +532,111 @@ class SteamTracksController < UserApplicationController
 end
 ```
 
+### Example Sidekiq/Cron workers to keep data in sync
 
-# TODO: finish these docs up
+Now you can stay in sync with your data by just running workers regularly that process:
+
+1. left users
+2. changed fields
+
+By doing so you always stay updated on the data and you have no need to crawl the user list or a single user's information.
+
+
+#### Leaver Worker
+
+This Sidekiq worker runs every 10 minutes via `whenever` gem.
+
+Schedule code:
+
+```ruby
+
+every 10.minutes do
+  runner 'LeaverWorker.perform_async'
+end
+```
+
+Worker Code:
+```ruby
+
+class LeaverWorker
+  include Sidekiq::Worker
+  sidekiq_options retry: false
+
+  def perform
+    leavers = SteamTracks.userFlushLeavers
+
+    # gets list of leavers and removes steamtracks model and sets is_steamtracks flag accordingly
+    if leavers["num_results"] > 0
+      leavers["leavers"].each do |u32|
+        user = User.find_by_steamid32(u32)
+        if user.is_steamtracks
+          user.is_steamtracks = false
+          user.save
+          user.steam_tracks.destroy
+        end
+      end
+    end
+  end
+end
+```
+
+#### Changes Worker
+
+This worker runs like the leaver worker every 10 minutes.
+
+Worker Code:
+
+```ruby
+
+class ChangesWorker
+  include Sidekiq::Worker
+  sidekiq_options retry: false
+
+  def perform
+    # get latest timestamp which is stored in a textfile
+    # this can also be put into a database, this is just an improvised example
+    delta_file = File.join(Rails.root, "config", "delta_from_timestamp")
+    next_timestamp = File.read(delta_file).to_i
+
+    begin
+      data = SteamTracks.userChanges(next_timestamp)
+      data["users"].each do |steamid32,hash|
+        user = User.find_by_steamid32(steamid32.to_i)
+        next if user.nil?
+
+        # this is the same method of reducing the nested json hash like in the signup controller
+        # putting this into a helper is handy
+        newinfo = {}
+        hash.each do |k,v|
+          next if k == "joined_app_at" || k == "steamid32"
+
+          if k == "dota2"
+            v.each do |dk,dv|
+              newinfo["dota2_#{dk.downcase}".to_sym] = dv
+            end
+            next
+          end
+
+          newinfo[k.downcase.to_sym] = v
+        end
+
+        user.steam_tracks.assign_attributes(newinfo)
+        if user.steam_tracks.changed?
+          user.steam_tracks.save
+        end
+      end
+
+      # store next timestamp and loop as long as the query returns >= 100 results
+      next_timestamp = data["next_timestamp"]
+    end until data["num_results"] < 100
+
+    # worker is done, save the latest next_timestamp for the next worker in 10 minutes
+    File.open(delta_file, 'w') {|f| f.write(next_timestamp) }
+  end
+end
+```
+
+Those 2 workers will keep your data completely in sync, it's really that simple :)
 
 ## Contributing
 
