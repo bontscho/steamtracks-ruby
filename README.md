@@ -361,6 +361,8 @@ Full SteamTracks integration into a Rails 4 project with existing User model
 
 ### Example model for SteamTracks
 
+#### User Model flag
+
 Add `is_steamtracks` boolean to user model to have a local flag on which user has authorized Steamtracks:
 
     $ rails g migration add_is_steamtracks_to_users is_steamtracks:boolean
@@ -378,6 +380,8 @@ end
 Now create a model with all fields you want to stay updated on (according to your app permissions).
 
     $ rails g model UserSteamTracks user_id:integer personastate:integer ... dota2_teamlogo
+
+#### The Migration
 
 Full migration example:
 
@@ -418,7 +422,7 @@ class CreateUserSteamTracks < ActiveRecord::Migration
 end
 ```
 
-The model:
+#### The Model
 
 ```ruby
 # app/models/user_steam_tracks.rb
@@ -443,6 +447,8 @@ end
 
 ### Example Signup process and Route
 
+#### Route
+
 Add routes to your `config/routes.rb`:
 
 ```ruby
@@ -450,7 +456,8 @@ get "/steamtracks/signup" => "steam_tracks#signup", as: "steamtracks_signup"
 get "/steamtracks/callback" => "steam_tracks#callback", as: "steamtracks_callback"
 ```
 
-The Controller
+#### Signup Controller
+
 ```ruby
 # app/controllers/steam_tracks_controller.rb
 
