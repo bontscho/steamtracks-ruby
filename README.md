@@ -74,7 +74,7 @@ redirect_to SteamTracks.getSignupURL
 
 ##### /signup/status
 
-Get the Status of for a given token (e.g. at the callback URL)
+Get the Status for a given token (e.g. at the callback URL)
 
 ```ruby
 token = "xxxxxxxxxxxxxxxxxxxx" # or in rails params[:token]
