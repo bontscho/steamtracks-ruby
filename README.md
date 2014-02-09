@@ -203,8 +203,63 @@ end
 ```
 
 ##### /users/games
+
+Information about your users' currently played games. Useful for statistics on your website (like the states)
+
+```ruby
+
+result = SteamTracks.userGames
+
+# result => {
+#   "games": {
+#        "570": {          // Steam Game AppID(String)
+#          "n":  "Dota 2"  // Name of Game (useful for added Non-Steam Games)
+#          "o": 1337,      // 1337 users are online in Dota 2
+#          "p": 345        // 345 of those 1337 users are playing an active match of Dota 2 right now
+#        },
+#        "730": {
+#          "n": "Counter-Strike: Global Offensive"
+#          "o": 567,
+#          "p": 123
+#        },
+#        [...]
+#      }
+#    }
+#}
+
+games = result["games"]
+# ... further enhance your information here ...
+```
+
 ##### /users/leavers
+
+Returns a list of all users that have left your app.
+
+```ruby
+
+result = SteamTracks.userLeavers
+# result => {
+#    "num_results": 42,   // total number of users that left
+#    "leavers": [
+#        12345678,           // SteamID32 of user
+#        12345679,
+#        [...]
+#    ]
+#}
+
+leavers = result["leavers"]
+```
+
 ##### /users/flushleavers
+
+Same as `/users/leavers` with the difference that it deletes the list on the server (useful for update workers)
+
+```ruby
+
+result = SteamTracks.userFlushLeavers
+# ....
+```
+
 ##### /users/changes
 
 #### Notifications
