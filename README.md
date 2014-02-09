@@ -147,7 +147,7 @@ count = SteamTracks.userCount
 # count => {"users" : 1337}
 ```
 
-##### /users
+##### /users/info
 
 Get info for a certain user (by SteamID32)
 
@@ -171,6 +171,45 @@ info = SteamTracks.userInfo(12345678)
 
 userinfo = info["userinfo"]
 ```
+
+##### /users/states
+
+Information about your users' online status. Useful for statistics on your website (to show activity and such).
+
+```ruby
+
+result = SteamTracks.userStates
+# result => {
+#   "states": {
+#       "1": 123,
+#       "0": 65,
+#       "3": 30,
+#       "2": 3,
+#       "4": 14
+#   }
+#}
+
+states = result["states"]
+
+# count offline and online users
+online = 0
+offline = 0
+states.each do |k,v|
+    k == "0" ? offline += v : online += v
+end
+
+# online => 170
+# offline => 65
+```
+
+##### /users/games
+##### /users/leavers
+##### /users/flushleavers
+##### /users/changes
+
+#### Notifications
+
+##### /notify
 
 # TODO: finish these docs up
 
