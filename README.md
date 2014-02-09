@@ -262,9 +262,78 @@ result = SteamTracks.userFlushLeavers
 
 ##### /users/changes
 
+Returns a list of users and their updated fields since a given timestamp (useful for update workers).
+Optional 2nd parameter fields to only yield given fields.
+
+```ruby
+
+result = SteamTracks.userChanges(1390337790452)
+result_only_updated_playername = SteamTracks.userChanges(1390337790452, ['playerName'])
+
+# result => {
+#      "next_timestamp": 1390337790452,
+#      "num_results": 50,
+#      "users": [
+#        "12345678": {
+#          "playerName": "Player1 new name",
+#          "personaState": "3",
+#          "dota2": {
+#            "wins": "1337"
+#          }
+#        },
+#        "23456789": {
+#          "personaState": "0",
+#          "dota2": {
+#            "wins": "500",
+#            "friendly": "15",
+#            "soloCompetitiveRank": "3531"
+#          }
+#        }
+#      ]
+#}
+
+from_timestamp = result["next_timestamp"]
+changed_users = result["users"]
+
+# ... perform change logic
+
+# next time request will be
+result_next = SteamTracks.userChanges(from_timestamp)
+# ...
+```
+
 #### Notifications
 
 ##### /notify
+
+Sends a notification to a list of users or all users of your app.
+
+```ruby
+# message to single user
+SteamTracks.notify({
+    message: "Message goes here",
+    to: 123123123
+})
+
+# message to list of users
+SteamTracks.notify({
+    message: "Message goes here",
+    to: [123123123, 312312323, 412541242]
+})
+
+# message to all users of your app
+SteamTracks.notify({
+    message: "Message goes here",
+    broadcast: true
+})
+
+# message to all users of your app except offline
+SteamTracks.notify({
+    message: "Message goes here",
+    broadcast: true,
+    exclude_offline: true
+})
+```
 
 # TODO: finish these docs up
 
