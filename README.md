@@ -147,7 +147,34 @@ count = SteamTracks.userCount
 # count => {"users" : 1337}
 ```
 
-# TODO: document the rest
+##### /users
+
+Get info for a certain user (by SteamID32)
+
+```ruby
+
+info = SteamTracks.userInfo(12345678)
+# info => {
+#   "userinfo": {
+#       "steamid32": 12345678,                        // user's SteamID32(Int)
+#       "joined_app_at": "2014-01-01T00:30:01.337Z",  // time when users joined the app
+#       "personaState": "1",
+#       "playerName": "Player1",
+#       [...],
+#       "dota2": {
+#         "level": "100",
+#         "recruitmentLevel": "42",
+#         [...]
+#       }
+#     }
+#}
+
+userinfo = info["userinfo"]
+```
+
+# TODO: finish these docs up
+
+## Examples & Recommendations
 
 ## Contributing
 
