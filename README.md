@@ -27,6 +27,81 @@ Initialize the API data. For Rails put this into `config/initializers/steam_trac
       config.api_secret = "API_SECRET"
     end
 
+### API Functions
+
+#### Signup Process
+
+##### /signup/token
+
+Get a token for the signup process
+
+    # just get a token
+    token = SteamTracks.getSignupToken                              # token => "xxxxxxxxxxxxxxxxxxxx"
+
+    # force a certain steamid
+    token = SteamTracks.getSignupToken({steamid: 123456789})        # token => "xxxxxxxxxxxxxxxxxxxx"
+
+    # add the steamid to the callback url
+    token = SteamTracks.getSignupToken({return_steamid32: true})    # token => "xxxxxxxxxxxxxxxxxxxx"
+
+
+Get the Signup URL
+
+    # get signup url via token
+    token = SteamTracks.getSignupToken(arguments)
+    url = SteamTracks.getSignupURL(token)
+
+    # or use the shortcut to directly get the signup url for given (optional) arguments
+    url = SteamTracks.getSignupURL(nil, arguments)
+    # default url with default token
+    url = SteamTracks.getSignupURL
+
+    # quick way of starting the appauth
+    redirect_to SteamTracks.getSignupURL
+
+
+##### /signup/status
+
+Get the Status of for a given token (e.g. at the callback URL)
+
+    token = "xxxxxxxxxxxxxxxxxxxx" # or in rails params[:token]
+
+    info = SteamTracks.getSignupStatus(token)
+    # info => {
+    #   "status": "accepted",
+    #   "user": 12345678
+    #}
+
+##### /signup/ack
+
+Acknowledge the Signup Process. If the user has accepted, add the SteamID32, if not, just acknowledge (optional) to instantly remove the Signup Token from the server.
+
+    token = "xxxxxxxxxxxxxxxxxxxx"
+    info = {
+        "status": "accepted",
+        "user": 12345678
+    }
+
+    result = SteamTracks.ackSignup(token, info["user"])
+
+    # result => {
+    #    "status": "OK",
+    #    "userinfo": {
+    #      "personaState": "1",
+    #      "playerName": "Player1",
+    #      [...],
+    #      "dota2": {
+    #        "level": "100",
+    #        "recruitmentLevel": "42",
+    #        [...]
+    #      }
+    #    }
+    #  }
+
+    userinfo = result["userinfo"]
+
+    # userinfo holds all data for the given user, continue to process in your logic
+
 ## Contributing
 
 1. Fork it ( https://github.com/bontscho/steamtracks-ruby/fork )
