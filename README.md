@@ -135,7 +135,6 @@ users = users_page1["users"]
 
 # get users on page 2
 users_page2 = SteamTracks.userList(2)
-
 ```
 
 ##### /users/count
@@ -146,7 +145,6 @@ Get the number of users in your app
 
 count = SteamTracks.userCount
 # count => {"users" : 1337}
-
 ```
 
 
