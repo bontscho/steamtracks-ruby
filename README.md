@@ -377,8 +377,10 @@ class AddIsSteamtracksToUsers < ActiveRecord::Migration
 end
 ```
 
-and don't forget to add the relation to the user model:
+and don't forget to add the relation to your user model:
 ```ruby
+# app/models/user.rb
+
 has_one :steam_tracks, class_name: "UserSteamTracks"
 ```
 
