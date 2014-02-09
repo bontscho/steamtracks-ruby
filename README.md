@@ -377,6 +377,11 @@ class AddIsSteamtracksToUsers < ActiveRecord::Migration
 end
 ```
 
+and don't forget to add the relation to the user model:
+```ruby
+has_one :steam_tracks, class_name: "UserSteamTracks"
+```
+
 Now create a model with all fields you want to stay updated on (according to your app permissions).
 
     $ rails g model UserSteamTracks user_id:integer personastate:integer [...] dota2_teamlogo:string
