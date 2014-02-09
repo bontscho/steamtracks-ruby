@@ -1,12 +1,12 @@
 # SteamTracks
 
-TODO: Write a gem description
+This Gem implements the [SteamTracks](https://steamtracks.com) API to use in a very comfortable way.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'steam_tracks'
+    gem 'steam_tracks', '0.1.5'
 
 And then execute:
 
@@ -14,11 +14,18 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install steam_tracks
+    $ gem install steam_tracks -v '0.1.5'
 
 ## Usage
 
-TODO: Write usage instructions here
+### Initializing
+
+Initialize the API data. For Rails put this into `config/initializers/steam_tracks.rb`
+
+    SteamTracks.setup do |config|
+      config.api_key = "API_KEY"
+      config.api_secret = "API_SECRET"
+    end
 
 ## Contributing
 
