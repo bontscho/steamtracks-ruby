@@ -379,7 +379,7 @@ end
 
 Now create a model with all fields you want to stay updated on (according to your app permissions).
 
-    $ rails g model UserSteamTracks user_id:integer personastate:integer ... dota2_teamlogo
+    $ rails g model UserSteamTracks user_id:integer personastate:integer [...] dota2_teamlogo:string
 
 #### The Migration
 
