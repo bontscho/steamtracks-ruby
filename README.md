@@ -115,6 +115,41 @@ userinfo = result["userinfo"]
 # userinfo holds all data for the given user, continue to process in your logic
 ```
 
+#### User Functions
+
+##### /users
+
+Get a list of all users (100 per page).
+
+```ruby
+
+users_page1 = SteamTracks.userList
+# users_page1 => {
+#   "num_pages": 10,
+#   "num_results": 994,
+#   "users": [...]
+# }
+
+# array of users is here:
+users = users_page1["users"]
+
+# get users on page 2
+users_page2 = SteamTracks.userList(2)
+
+```
+
+##### /users/count
+
+Get the number of users in your app
+
+```ruby
+
+count = SteamTracks.userCount
+# count => {"users" : 1337}
+
+```
+
+
 ## Contributing
 
 1. Fork it ( https://github.com/bontscho/steamtracks-ruby/fork )
