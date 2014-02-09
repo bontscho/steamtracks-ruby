@@ -441,6 +441,95 @@ class UserSteamTracks < ActiveRecord::Base
 end
 ```
 
+### Example Signup process and Route
+
+Add routes to your `config/routes.rb`:
+
+```ruby
+get "/steamtracks/signup" => "steam_tracks#signup", as: "steamtracks_signup"
+get "/steamtracks/callback" => "steam_tracks#callback", as: "steamtracks_callback"
+```
+
+The Controller
+```ruby
+# app/controllers/steam_tracks_controller.rb
+
+# inherits from UserApplicationController that only allows logged in users to access that controller
+class SteamTracksController < UserApplicationController
+
+  # signup:
+  # if user is not in steamtracks, send him off to the signup url
+  # if not, redirect to root_path
+  def signup
+    if current_user.is_steamtracks
+      redirect_to root_path, notice: "You already authorized SteamTracks"
+    else
+      url = SteamTracks.getSignupURL
+      redirect_to url
+    end
+
+  rescue
+    redirect_to root_path, alert: "An Error occured, please try again later"
+  end
+
+  def callback
+    # allow only token parameter and extract token
+    cb_info = set_callback_info
+    token = cb_info[:token]
+
+    # retrieve information on that token
+    info = SteamTracks.getSignupStatus(token)
+
+    # if user accepted, check if the steamid matches your steamid in case the user sign up on steamtracks with a different account
+    # you can optionally specify an allowed steamid when getting the signup token
+    if info["status"] == "accepted"
+      if info["user"] != current_user.steamid32
+        redirect_to root_path, alert: "You have to authorize SteamTracks with the same account as here"
+        return
+      end
+
+      # user is the right one, acknowlege the signup and get userinfo
+      result = SteamTracks.ackSignup(token, info["user"])
+      userinfo = result["userinfo"]
+
+      # reduce the nested json userinfo hash to match your steamtracks database model
+      newinfo = {}
+      userinfo.each do |k,v|
+        # look out for joined_app_at, steamid32 and dota2
+        next if k == "joined_app_at" || k == "steamid32"
+
+        if k == "dota2"
+          v.each do |dk,dv|
+            newinfo["dota2_#{dk.downcase}".to_sym] = dv
+          end
+          next
+        end
+
+        newinfo[k.downcase.to_sym] = v
+      end
+
+      # then create the steamtracks model accordingly and update the is_steamtracks flag in your model
+      current_user.steam_tracks = UserSteamTracks.new(newinfo)
+      current_user.steam_tracks.save
+      current_user.is_steamtracks = true
+      current_user.save
+
+      redirect_to root_path, notice: "Successfully authorized SteamTracks"
+    else
+      # ack decline
+      SteamTracks.ackSignup(token)
+      redirect_to root_path, alert: "SteamTracks authorization declined, feel free to authorize at a later time"
+    end
+  rescue
+    redirect_to root_path, alert: "An Error occured, please try again later"
+  end
+
+  private
+  def set_callback_info
+    params.permit(:token)
+  end
+end
+```
 
 
 # TODO: finish these docs up
