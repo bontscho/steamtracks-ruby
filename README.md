@@ -147,6 +147,7 @@ count = SteamTracks.userCount
 # count => {"users" : 1337}
 ```
 
+# TODO: document the rest
 
 ## Contributing
 
