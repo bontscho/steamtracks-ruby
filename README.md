@@ -39,13 +39,16 @@ Get a token for the signup process
 
 ```ruby
 # just get a token
-token = SteamTracks.getSignupToken                              # token => "xxxxxxxxxxxxxxxxxxxx"
+token = SteamTracks.getSignupToken
+# token => "xxxxxxxxxxxxxxxxxxxx"
 
 # force a certain steamid
-token = SteamTracks.getSignupToken({steamid: 123456789})        # token => "xxxxxxxxxxxxxxxxxxxx"
+token = SteamTracks.getSignupToken({steamid: 123456789})
+# token => "xxxxxxxxxxxxxxxxxxxx"
 
 # add the steamid to the callback url
-token = SteamTracks.getSignupToken({return_steamid32: true})    # token => "xxxxxxxxxxxxxxxxxxxx"
+token = SteamTracks.getSignupToken({return_steamid32: true})
+# token => "xxxxxxxxxxxxxxxxxxxx"
 ```
 
 
