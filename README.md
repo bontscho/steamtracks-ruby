@@ -22,10 +22,12 @@ Or install it yourself as:
 
 Initialize the API data. For Rails put this into `config/initializers/steam_tracks.rb`
 
-    SteamTracks.setup do |config|
-      config.api_key = "API_KEY"
-      config.api_secret = "API_SECRET"
-    end
+```ruby
+SteamTracks.setup do |config|
+  config.api_key = "API_KEY"
+  config.api_secret = "API_SECRET"
+end
+```
 
 ### API Functions
 
